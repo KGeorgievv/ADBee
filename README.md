@@ -41,23 +41,71 @@ pip install -e .
 
 ## 🧪 Example Usage
 
+### Basic Usage
 ```python
-import adbee
+from adbee import ADBee
 
-adbee = adbee.ADBee()
-devices = adbee.get_devices()
+# Initialize ADBee
+adb = ADBee()
+
+# Get list of connected devices
+devices = adb.get_devices()
+print(f"Connected devices: {devices}")
+
+# Get basic device info
+device_info = adb.get_device_info()
+print(f"Device info: {device_info}")
+```
+
+### Comprehensive Device Information
+```python
+from adbee import ADBee
+
+adb = ADBee()
+
+# Specify a device (optional)
+device = "DEVICE_SERIAL"  # or None for default device
+
+# Get various device statistics
+storage = adb.get_storage_info(device=device)
+memory = adb.get_memory_info(device=device)
+battery = adb.get_battery_info(device=device)
+network = adb.get_network_info(device=device)
+cpu = adb.get_cpu_info(device=device)
+
+# Print collected information
+print("Storage Info:", storage)
+print("Memory Info:", memory)
+print("Battery Info:", battery)
+print("Network Info:", network)
+print("CPU Info:", cpu)
+```
+
+### Working with Multiple Devices
+```python
+from adbee import ADBee
+
+adb = ADBee()
+devices = adb.get_devices()
 
 for device in devices:
-  
-    # Get device information
-    device_info = adbee.get_device_info(device=device)
-
-    # Print device information
-    print("Device Information ({device})".format(device=device))
-    print("=" * 50)
-
-    for key, value in device_info.items():
-        print(f"{key}: {value}")
+    print(f"\nCollecting info for device: {device}")
+    
+    # Collect all device information
+    info = {
+        "device": adb.get_device_info(device=device),
+        "storage": adb.get_storage_info(device=device),
+        "memory": adb.get_memory_info(device=device),
+        "battery": adb.get_battery_info(device=device),
+        "network": adb.get_network_info(device=device),
+        "cpu": adb.get_cpu_info(device=device)
+    }
+    
+    # Print formatted output
+    for category, data in info.items():
+        print(f"\n{category.upper()}:")
+        for key, value in data.items():
+            print(f"  {key}: {value}")
 ```
 
 ## 📂 ADBee Functions
