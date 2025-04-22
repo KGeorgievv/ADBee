@@ -13,6 +13,7 @@ A lightweight Python utility to fetch **Android device information** via ADB (An
 - 🔋 **Battery Info**: Includes status, health, temperature, and charging state
 - 📱 **Device Metadata**: Model, manufacturer, Android version, API level
 - 🌐 **Network Info**: WiFi status, SSID, IP address, and MAC address
+- ⚙️ **CPU Info**: Includes cpu utilization percentage, per core frequencies
 - 🔁 Device filtering supported via `-s <device>` (ADB multiple device support)
 
 ## 🖥️ Prerequisites
@@ -34,35 +35,34 @@ cd adbee
 ## 🧪 Example Usage
 
 ```python
-from device_info import (
-    get_device_info,
-    get_memory_usage,
-    get_storage_usage,
-    get_battery_info,
-    get_device_network_info
-)
+import adbee
 
-# Without specifying a device (for single device connected)
-print(get_device_info())
-print(get_memory_usage())
-print(get_storage_usage())
-print(get_battery_info())
-print(get_device_network_info())
+adbee = adbee.ADBee()
+devices = adbee.get_devices()
 
-# With device serial number
-device_id = "emulator-5554"
-print(get_device_info(device=device_id))
+for device in devices:
+    # Get device information
+    device_info = adbee.get_device_info(device=device)
+
+    # Print device information
+    print("Device Information ({device})".format(device=device))
+    print(divider)
+
+    for key, value in device_info.items():
+        print(f"{key}: {value}")
 ```
 
-## 📂 Module Functions
+## 📂 ADBee Functions
 
 | Function Name | Description |
 |---------------|-------------|
+| `get_devices()` | Returns list of connected adb devices |
 | `get_device_info(device=None)` | Returns model, serial number, Android version, API level, and manufacturer |
-| `get_memory_usage(device=None)` | Returns total, free, and available memory (in MB) |
-| `get_storage_usage(device=None)` | Returns total, used, and free storage on `/data` (in GB) |
+| `get_memory_info(device=None)` | Returns total, free, and available memory (in MB) |
+| `get_storage_info(device=None)` | Returns total, used, and free storage on `/data` (in GB) |
 | `get_battery_info(device=None)` | Returns detailed battery information including health, level, and temperature |
-| `get_device_network_info(device=None)` | Returns WiFi status, SSID, IP address, and MAC address |
+| `get_network_info(device=None)` | Returns WiFi status, SSID, IP address, and MAC address |
+| `get_cpu_info(device=None)` | Returns total cores, active cores, utilization percentage, frequiencies per core |
 
 ## 📸 Sample Output
 
