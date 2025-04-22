@@ -1,5 +1,5 @@
-from utils.adb import execute
-from config.adb_commands import (
+from ..utils.adb import execute
+from ..config.adb_commands import (
     command_total_storage,
     command_used_storage,
     command_free_storage,

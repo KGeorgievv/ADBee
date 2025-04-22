@@ -1,5 +1,5 @@
-from utils.adb import execute
-from config.adb_commands import (
+from ..utils.adb import execute
+from ..config.adb_commands import (
     command_network_info,
     command_ip_info
 )

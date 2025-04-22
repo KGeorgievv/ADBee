@@ -1,5 +1,5 @@
-from utils.adb import execute
-from config.adb_commands import (
+from ..utils.adb import execute
+from ..config.adb_commands import (
     command_device_name,
     command_device_serial_number,
     command_device_android_version,

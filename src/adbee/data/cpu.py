@@ -1,5 +1,5 @@
-from utils.adb import execute
-from config.adb_commands import (
+from ..utils.adb import execute
+from ..config.adb_commands import (
     command_cpu_list,
     command_cpu_active_cores,
     command_process_activity,
