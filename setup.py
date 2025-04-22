@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -11,8 +11,8 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/KGeorgievv/ADBee",
-    packages=find_packages(where="src"),
     package_dir={"": "src"},
+    packages=find_namespace_packages(where="src"),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
