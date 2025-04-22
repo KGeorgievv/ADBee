@@ -73,3 +73,21 @@ dmypy.json
 # Windows
 Thumbs.db
 desktop.ini
+
+# Python packaging
+*.pyc
+__pycache__/
+*.so
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64

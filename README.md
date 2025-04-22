@@ -23,13 +23,20 @@ A lightweight Python utility to fetch **Android device information** via ADB (An
 - USB debugging enabled on the Android device
 - Permissions granted for ADB debugging
 
-## 🚀 Getting Started
+## 📦 Installation
 
-Clone the repository:
+Install directly from GitHub:
+
+```bash
+pip install git+https://github.com/KGeorgievv/ADBee.git
+```
+
+Or clone and install in development mode:
 
 ```bash
 git clone https://github.com/KGeorgievv/ADBee.git
-cd adbee
+cd ADBee
+pip install -e .
 ```
 
 ## 🧪 Example Usage

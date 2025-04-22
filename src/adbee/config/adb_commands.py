@@ -1,6 +1,3 @@
-# This file contains ADB commands for various operations.
-
-
 # ADB commands for storage information
 command_total_storage = "shell df -h /data | grep /data | awk '{print $2}'"
 command_used_storage = "shell df -h /data | grep /data | awk '{print $3}'"
@@ -30,6 +27,7 @@ command_cpu_list = "shell ls /sys/devices/system/cpu/ | grep '^cpu[0-9]'"
 command_cpu_active_cores = "shell cat /sys/devices/system/cpu/cpu*/online | grep -c 1"
 command_process_activity = "shell top -n 1"
 
+# ADB commands for CPU frequency information
 def command_cpu_min_frequency(cpu_id):
     return f"shell cat /sys/devices/system/cpu/{cpu_id}/cpufreq/scaling_min_freq"
 
