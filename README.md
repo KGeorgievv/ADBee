@@ -41,12 +41,13 @@ adbee = adbee.ADBee()
 devices = adbee.get_devices()
 
 for device in devices:
+  
     # Get device information
     device_info = adbee.get_device_info(device=device)
 
     # Print device information
     print("Device Information ({device})".format(device=device))
-    print(divider)
+    print("=" * 50)
 
     for key, value in device_info.items():
         print(f"{key}: {value}")
