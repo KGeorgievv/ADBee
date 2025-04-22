@@ -1,12 +1,12 @@
-from utils.adb import execute
-from commander import ADBCommander
+from .utils.adb import execute
+from .commander import ADBCommander
 
-from data.device import get_device_info
-from data.storage import get_storage_info
-from data.battery import get_battery_info
-from data.memory import get_memory_info
-from data.network import get_network_info
-from data.cpu import get_cpu_info
+from .data.device import get_device_info
+from .data.storage import get_storage_info
+from .data.battery import get_battery_info
+from .data.memory import get_memory_info
+from .data.network import get_network_info
+from .data.cpu import get_cpu_info
 
 class ADBee(ADBCommander):
     
