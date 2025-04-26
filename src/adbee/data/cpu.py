@@ -1,11 +1,12 @@
-from ..utils.adb import execute
+from ..utils.adb import (
+    execute,
+    execute_shell
+)
 from ..config.adb_commands import (
     command_cpu_list,
     command_cpu_active_cores,
     command_process_activity,
-    command_cpu_min_frequency,
-    command_cpu_max_frequency,
-    command_cpu_current_frequency
+    command_cpu_frequency_per_core
 )
 import re
 
@@ -14,27 +15,35 @@ def percent(part, cpu_total):
 
 def get_cpu_frequency(device=None):
     """
-    Get CPU frequency information.
+    Get CPU frequency information efficiently.
     :param device: Device ID
-    :return: Dictionary with CPU frequency information
+    :return: List of dictionaries with CPU frequency information
     """
-    cpu_list = execute(command_cpu_list, device=device)
+    output = execute_shell(command_cpu_frequency_per_core, device=device)
     cpu_frequencies = []
 
-    for cpu in cpu_list.split():
-        cpu_id = cpu.strip()
-        min_freq = execute(command_cpu_min_frequency(cpu_id), device=device)
-        max_freq = execute(command_cpu_max_frequency(cpu_id), device=device)
-        cur_freq = execute(command_cpu_current_frequency(cpu_id), device=device)
+    lines = output.strip().splitlines()
+
+    for line in lines:
+        line = line.strip()
+        if not line or ":" not in line:
+            continue
+
+        cpu_id, rest = line.split(":", 1)
+        freq_info = dict(item.split("=") for item in rest.strip().split())
+
+        cur = freq_info.get("cur")
+        minf = freq_info.get("min")
+        maxf = freq_info.get("max")
 
         cpu_frequency = {
             "cpu_id": cpu_id,
-            "min": int(min_freq) / 1000,
-            "max": int(max_freq) / 1000,
-            "cur": int(cur_freq) / 1000,
+            "min": int(minf) / 1000 if minf and minf.isdigit() else None,
+            "max": int(maxf) / 1000 if maxf and maxf.isdigit() else None,
+            "cur": int(cur) / 1000 if cur and cur.isdigit() else None,
         }
         cpu_frequencies.append(cpu_frequency)
-    
+
     return cpu_frequencies
 
 def get_cpu_info(device=None):

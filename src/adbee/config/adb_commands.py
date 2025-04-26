@@ -26,13 +26,11 @@ command_ip_info = "shell ip addr show wlan0"
 command_cpu_list = "shell ls /sys/devices/system/cpu/ | grep '^cpu[0-9]'"
 command_cpu_active_cores = "shell cat /sys/devices/system/cpu/cpu*/online | grep -c 1"
 command_process_activity = "shell top -n 1"
-
-# ADB commands for CPU frequency information
-def command_cpu_min_frequency(cpu_id):
-    return f"shell cat /sys/devices/system/cpu/{cpu_id}/cpufreq/scaling_min_freq"
-
-def command_cpu_max_frequency(cpu_id): 
-    return f"shell cat /sys/devices/system/cpu/{cpu_id}/cpufreq/scaling_max_freq"
-
-def command_cpu_current_frequency(cpu_id):
-    return f"shell cat /sys/devices/system/cpu/{cpu_id}/cpufreq/scaling_cur_freq"
+command_cpu_frequency_per_core = '''
+grep "^cpu[0-9]" /proc/stat;
+for cpu in /sys/devices/system/cpu/cpu[0-9]*; do
+    name=$(basename $cpu);
+    echo "$name:cur=$(cat $cpu/cpufreq/scaling_cur_freq 2>/dev/null) min=$(cat $cpu/cpufreq/scaling_min_freq 2>/dev/null) max=$(cat $cpu/cpufreq/scaling_max_freq 2>/dev/null)";
+done;
+echo END
+'''
