@@ -21,19 +21,22 @@ class ADBee(ADBCommander):
     def get_devices(self):
         """
         Get a list of connected devices.
-        :return: List of device IDs
+        :return: List of device serial numbers
         """
         adb_devices = self.execute("devices")
+        lines = adb_devices.strip().splitlines()
 
-        if "device" in adb_devices.splitlines()[-1]:
-            # prase devices serials
-            devices = adb_devices.splitlines()[1:]
-            devices = [device.split()[0] for device in devices if "device" in device]
-            
-            return devices
-        else:
-            print("No ADB device connected. Please connect a device and try again.")
-            exit(1)
+        if len(lines) <= 1:
+            return []
+
+        devices = []
+        for line in lines[1:]:
+            parts = line.split()
+            if len(parts) == 2 and parts[1] == "device":
+                devices.append(parts[0])
+
+        return devices
+
 
     def get_device_info(self, device):
         """
