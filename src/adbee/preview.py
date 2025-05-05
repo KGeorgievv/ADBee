@@ -1,68 +1,102 @@
-from .adbee import ADBee
+from adbee.adbee import ADBee
+import time
+import asyncio
 
 adbee = ADBee()
 divider = "=" * 50
 
-devices = adbee.get_devices()
-for device in devices:
-    # Get device information
-    device_info = adbee.get_device_info(device=device)
+async def measure_execution_time(func, *args, **kwargs):
+    """Measures the execution time of a function."""
+    start_time = time.perf_counter()  # Record the start time
+    
+    result = await func(*args, **kwargs)  # Await the async function
+    
+    end_time = time.perf_counter()  # Record the end time
+    execution_time = end_time - start_time  # Calculate the elapsed time
+    print(divider)
+    print(f"Execution Time of {func.__name__}: {execution_time:.4f} seconds")
+    
+    return result  # Return the result of the function
 
-    # Print device information
+async def preview_device_info(device=None):
+    device_info = await measure_execution_time(
+        func=adbee.get_device_info,
+        device=device
+    )
+
     print("Device Information ({device})".format(device=device))
     print(divider)
+    print(device_info)
 
-    for key, value in device_info.items():
-        print(f"{key}: {value}")
-
-    # Get storage usage
-    storage_info = adbee.get_storage_info(device=device)
+async def preview_storage_info(device=None):
+    storage_info = await measure_execution_time(
+        func=adbee.get_storage_info,
+        device=device
+    )
     
-    # Print storage usage information
-    print("\nStorage Information ({device})".format(device=device))
+    print("Storage Information ({device})".format(device=device))
     print(divider)
+    print(storage_info)
 
-    for key, value in storage_info.items():
-        print(f"{key}: {value} GB")
+async def preview_memory_info(device=None):
+    memory_info = await measure_execution_time(
+        func=adbee.get_memory_info,
+        device=device
+    )
 
-    # Get memory usage
-    memory_info = adbee.get_memory_info(device=device)
-
-    # Print memory usage information
-    print("\nMemory Information ({device})".format(device=device))
+    print("Memory Information ({device})".format(device=device))
     print(divider)
+    print(memory_info)
 
-    for key, value in memory_info.items():
-        print(f"{key}: {value} MB")
+async def preview_battery_info(device=None):
+    battery_info = await measure_execution_time(
+        func=adbee.get_battery_info,
+        device=device
+    )
 
-    # Get battery information
-    battery_info = adbee.get_battery_info(device=device)
-
-    # Print battery information
-    print("\nBattery Information ({device})".format(device=device))
+    print("Battery Information ({device})".format(device=device))
     print(divider)
+    print(battery_info)
 
-    for key, value in battery_info.items():
-        if key == "battery_temp":
-            print(f"{key}: {int(value) / 10} °C")
-        else:
-            print(f"{key}: {value}")
+async def preview_network_info(device=None):
+    network_info = await measure_execution_time(
+        func=adbee.get_network_info,
+        device=device
+    )
 
-    # Get network information
-    network_info = adbee.get_network_info(device=device)
-
-    # Print network information
-    print("\nNetwork Information ({device})".format(device=device))
+    print("Network Information ({device})".format(device=device))
     print(divider)
-    for key, value in network_info.items():
-        print(f"{key}: {value}")
+    print(network_info)
 
-    # Get CPU information
-    cpu_info = adbee.get_cpu_info(device=device)
+async def preview_cpu_info(device=None):
+    cpu_info = await measure_execution_time(
+        func=adbee.get_cpu_info,
+        device=device
+    )
 
-    # Print CPU information
-    print("\nCPU Information ({device})".format(device=device))
+    print("CPU Information ({device})".format(device=device))
     print(divider)
+    print(cpu_info)
 
-    for key, value in cpu_info.items():
-        print(f"{key}: {value}")
+
+async def preview_data(device=None):
+    devices = await adbee.get_devices()
+    tasks = []
+    
+    for device in devices:
+        tasks.append(asyncio.create_task(preview_device_info(device=device)))
+        tasks.append(asyncio.create_task(preview_storage_info(device=device)))
+        tasks.append(asyncio.create_task(preview_memory_info(device=device)))
+        tasks.append(asyncio.create_task(preview_battery_info(device=device)))
+        tasks.append(asyncio.create_task(preview_network_info(device=device)))
+        tasks.append(asyncio.create_task(preview_cpu_info(device=device)))
+    
+    # Wait for all tasks to complete
+    await asyncio.gather(*tasks)
+
+async def main():
+    await measure_execution_time(preview_data)
+
+# Run the asyncio event loop
+if __name__ == "__main__":
+    asyncio.run(main())

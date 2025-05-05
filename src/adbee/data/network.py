@@ -1,13 +1,16 @@
+from adbee.models import Network
 from ..utils.adb import execute
 from ..config.adb_commands import (
     command_network_info,
     command_ip_info
 )
 
-def get_network_info(device=None):
+import asyncio
+
+async def get_network_info(device=None):
     # Run a single adb command and capture all necessary output
-    wifi_info = execute(command_network_info, device=device)
-    ip_info = execute(command_ip_info, device=device)
+    wifi_info = await asyncio.to_thread(execute, command_network_info, device=device)
+    ip_info = await asyncio.to_thread(execute, command_ip_info, device=device)
 
     # Parse the wifi information
     wifi_status = None
@@ -30,10 +33,11 @@ def get_network_info(device=None):
         elif "link/ether" in line:
             mac_address = line.split()[1]  # Extracts the MAC address
 
-    # Return the gathered information as a dictionary
-    return {
-        'wifi_status': wifi_status,
-        'wifi_ssid': wifi_ssid,
-        'ip_address': ip_address,
-        'mac_address': mac_address,
-    }
+    result = Network(
+        wifi_status=wifi_status,
+        wifi_ssid=wifi_ssid,
+        ip_address=ip_address,
+        mac_address=mac_address,
+    )
+
+    return result.model_dump_json(indent=2)

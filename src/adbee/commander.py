@@ -12,7 +12,7 @@ class ADBCommander(ABC):
         pass
 
     @abstractmethod
-    def get_devices(self):
+    async def get_devices(self):
         """
         Get a list of connected devices.
         :return: List of device IDs
@@ -20,7 +20,7 @@ class ADBCommander(ABC):
         pass
 
     @abstractmethod
-    def get_device_info(self, device):
+    async def get_device_info(self, device):
         """
         Get device information.
         :param device: Device ID
@@ -29,7 +29,7 @@ class ADBCommander(ABC):
         pass
 
     @abstractmethod
-    def get_storage_info(self, device):
+    async def get_storage_info(self, device):
         """
         Get storage usage information.
         :param device: Device ID
@@ -38,7 +38,7 @@ class ADBCommander(ABC):
         pass
 
     @abstractmethod
-    def get_memory_info(self, device):
+    async def get_memory_info(self, device):
         """
         Get memory usage information.
         :param device: Device ID
@@ -47,7 +47,7 @@ class ADBCommander(ABC):
         pass
 
     @abstractmethod
-    def get_battery_info(self, device):
+    async def get_battery_info(self, device):
         """
         Get battery information.
         :param device: Device ID
@@ -56,7 +56,7 @@ class ADBCommander(ABC):
         pass
 
     @abstractmethod
-    def get_network_info(self, device):
+    async def get_network_info(self, device):
         """
         Get network information.
         :param device: Device ID
@@ -65,7 +65,7 @@ class ADBCommander(ABC):
         pass
 
     @abstractmethod
-    def get_cpu_info(self, device):
+    async def get_cpu_info(self, device):
         """
         Get CPU information.
         :param device: Device ID

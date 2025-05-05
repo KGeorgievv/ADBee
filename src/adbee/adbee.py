@@ -8,22 +8,34 @@ from .data.memory import get_memory_info
 from .data.network import get_network_info
 from .data.cpu import get_cpu_info
 
+import asyncio
+
 class ADBee(ADBCommander):
     
     def execute(self, command):
         """
-        Execute an ADB command.
+        Execute an ADB command synchronously.
         :param command: ADB command to execute
         :return: Command output
         """
         return execute(command)
 
-    def get_devices(self):
+    async def execute_async(self, command, device):
+        """
+        Execute an ADB command asynchronously using a separate thread.
+        :param command: ADB command to execute
+        :param device: Device to target
+        :return: Command output
+        """
+        return await asyncio.to_thread(self.execute, command)
+
+    async def get_devices(self):
         """
         Get a list of connected devices.
         :return: List of device serial numbers
         """
-        adb_devices = self.execute("devices")
+        # Use the async method here for executing "devices" command
+        adb_devices = await self.execute_async("devices", None)  # We don't need a specific device for the "devices" command
         lines = adb_devices.strip().splitlines()
 
         if len(lines) <= 1:
@@ -37,52 +49,51 @@ class ADBee(ADBCommander):
 
         return devices
 
-
-    def get_device_info(self, device):
+    async def get_device_info(self, device):
         """
         Get device information.
         :param device: Device ID
         :return: Dictionary with device information
         """
-        return get_device_info(device)
+        return await get_device_info(device)
     
-    def get_storage_info(self, device):
+    async def get_storage_info(self, device):
         """
         Get storage usage information.
         :param device: Device ID
         :return: Dictionary with storage usage information
         """
-        return get_storage_info(device)
+        return await get_storage_info(device)
     
-    def get_memory_info(self, device):
+    async def get_memory_info(self, device):
         """
         Get memory usage information.
         :param device: Device ID
         :return: Dictionary with memory usage information
         """
-        return get_memory_info(device)
+        return await get_memory_info(device)
     
-    def get_battery_info(self, device):
+    async def get_battery_info(self, device):
         """
         Get battery information.
         :param device: Device ID
         :return: Dictionary with battery information
         """
-        return get_battery_info(device)
+        return await get_battery_info(device)
     
-    def get_network_info(self, device):
+    async def get_network_info(self, device):
         """
         Get network information.
         :param device: Device ID
         :return: Dictionary with network information
         """
-        return get_network_info(device)
+        return await get_network_info(device)
     
-    def get_cpu_info(self, device):
+    async def get_cpu_info(self, device):
         """
         Get CPU information.
         :param device: Device ID
         :return: Dictionary with CPU information
         """
-        return get_cpu_info(device)
+        return await get_cpu_info(device)
     

@@ -1,41 +1,8 @@
+from adbee.models import Battery
 from ..utils.adb import execute
 from ..config.adb_commands import (
     command_battery_info
 )
-
-status_map = {
-    1: "Unknown",
-    2: "Charging",
-    3: "Discharging",
-    4: "Not charging",
-    5: "Full"
-}
-
-health_map = {
-    1: "Unknown",
-    2: "Good",
-    3: "Overheat",
-    4: "Dead",
-    5: "Over voltage", 
-    6: "Unspecified failure", 
-    7: "Cold"
-}
-
-charging_state_map = {
-    0: "Unknown",
-    1: "Enabled",
-    2: "Disabled",
-    3: "Limited"
-}
-
-capacity_level_map = {
-    0: "Unknown",
-    1: "Critical",
-    2: "Low",
-    3: "Normal",
-    4: "High",
-    5: "Full"
-}
 
 fields_to_extract = {
     "ac_powered",
@@ -48,12 +15,15 @@ fields_to_extract = {
     "voltage",
     "temperature",
     "technology",
-    "charging_state",
-    "capacity_level"
+    "capacity_level",
+    "maximum_capacity",
+    "design_capacity",
 }
-    
-def get_battery_info(device=None):
-    output = execute(command_battery_info, device)
+
+import asyncio
+
+async def get_battery_info(device=None):
+    output = await asyncio.to_thread(execute, command_battery_info, device)
 
     battery_info = {}
 
@@ -77,18 +47,22 @@ def get_battery_info(device=None):
             elif value.lower() == "false":
                 value = False
 
-        # Convert enums and temperature
-        if key == "status":
-            value = status_map.get(value, value)
-        elif key == "health":
-            value = health_map.get(value, value)
-        elif key == "charging_state":
-            value = charging_state_map.get(value, value)
-        elif key == "capacity_level":
-            value = capacity_level_map.get(value, value)
-        elif key == "temperature":
-            value = round(value / 10.0, 1)
-
         battery_info[key] = value
 
-    return battery_info
+    result = Battery(
+        ac_powered=battery_info.get("ac_powered", False),
+        usb_powered=battery_info.get("usb_powered", False),
+        wireless_powered=battery_info.get("wireless_powered", False),
+        dock_powered=battery_info.get("dock_powered", False),
+        status=battery_info.get("status", "UNKNOWN"),
+        health=battery_info.get("health", "UNKNOWN"),
+        level=battery_info.get("level", 0),
+        voltage=battery_info.get("voltage", 0),
+        temperature=battery_info.get("temperature", 0),
+        technology=battery_info.get("technology", "UNKNOWN"),
+        capacity_level=battery_info.get("capacity_level", "UNKNOWN"),
+        maximum_capacity=battery_info.get("maximum_capacity", 0),
+        design_capacity=battery_info.get("design_capacity", 0),
+    )
+
+    return result.model_dump_json(indent=2)
