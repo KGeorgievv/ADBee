@@ -12,30 +12,29 @@ import asyncio
 
 class ADBee(ADBCommander):
     
-    def execute(self, command):
+    def execute(self, command, device=None):
         """
         Execute an ADB command synchronously.
         :param command: ADB command to execute
         :return: Command output
         """
-        return execute(command)
+        return execute(command, device)
 
-    async def execute_async(self, command, device):
+    async def execute_async(self, command, device=None):
         """
         Execute an ADB command asynchronously using a separate thread.
         :param command: ADB command to execute
         :param device: Device to target
         :return: Command output
         """
-        return await asyncio.to_thread(self.execute, command)
+        return await asyncio.to_thread(self.execute, command, device)
 
     async def get_devices(self):
         """
         Get a list of connected devices.
         :return: List of device serial numbers
         """
-        # Use the async method here for executing "devices" command
-        adb_devices = await self.execute_async("devices", None)  # We don't need a specific device for the "devices" command
+        adb_devices = await self.execute_async("devices")
         lines = adb_devices.strip().splitlines()
 
         if len(lines) <= 1:
