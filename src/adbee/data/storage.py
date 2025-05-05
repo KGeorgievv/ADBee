@@ -5,7 +5,6 @@ from ..config.adb_commands import (
     command_used_storage,
     command_free_storage,
 )
-
 import asyncio
 
 async def get_storage_info(device=None):

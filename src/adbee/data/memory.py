@@ -5,7 +5,6 @@ from ..config.adb_commands import (
     command_free_memory,
     command_available_memory,
 )
-
 import asyncio
 
 async def get_memory_info(device=None):

@@ -4,7 +4,6 @@ from ..config.adb_commands import (
     command_network_info,
     command_ip_info
 )
-
 import asyncio
 
 async def get_network_info(device=None):

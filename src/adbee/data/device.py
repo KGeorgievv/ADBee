@@ -7,7 +7,6 @@ from ..config.adb_commands import (
     command_device_api_level,
     command_device_manufacturer,
 )
-
 import asyncio
 
 async def get_device_info(device=None):
